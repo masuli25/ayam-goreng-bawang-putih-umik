@@ -2,71 +2,83 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#171717">
 <title>AYAM BAWANG UMIK | Pesan Online</title>
 <style>
-:root{--ink:#171717;--yellow:#f5c542;--cream:#fffaf0;--muted:#777;--line:#eee5d5}
-*{box-sizing:border-box}body{margin:0;background:#f7f5ef;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
-header{background:var(--ink);color:white;padding:24px 18px 30px;text-align:center}
-.brand{font-weight:900;letter-spacing:2px;font-size:13px;color:var(--yellow)}
-header h1{font-size:30px;line-height:1.05;margin:12px 0 8px}
-header p{color:#ddd;margin:0;font-size:14px}
-.hero{max-width:760px;margin:18px auto 0;padding:0 16px}
-.hero-box{background:linear-gradient(120deg,#292929,#111);border-radius:20px;padding:22px;color:white;display:flex;align-items:center;justify-content:space-between;gap:12px;overflow:hidden}
-.hero-box h2{font-size:23px;margin:0 0 8px}.hero-box p{margin:0;color:#ddd;font-size:13px;line-height:1.5}
-.hero-icon{font-size:76px;filter:drop-shadow(0 8px 10px #0008)}
-main{max-width:760px;margin:22px auto;padding:0 16px 120px}
-.section-title{font-size:19px;margin:24px 0 12px}
-.note{font-size:12px;color:#786b53;background:#fff4d4;border-radius:10px;padding:10px 12px;line-height:1.5}
-.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.item{background:white;border:1px solid var(--line);border-radius:15px;padding:13px;display:flex;flex-direction:column;min-height:170px}
-.food-icon{height:76px;border-radius:11px;background:linear-gradient(135deg,#fff0c2,#f8d978);display:grid;place-items:center;font-size:45px;margin-bottom:10px}
-.item h3{font-size:14px;margin:0 0 5px;line-height:1.3}.desc{font-size:11px;color:var(--muted);margin-bottom:8px;min-height:25px}
-.price-row{display:flex;justify-content:space-between;align-items:center;margin-top:auto;gap:8px}
-.price{font-weight:800;font-size:15px}.add{border:0;background:var(--ink);color:white;border-radius:20px;padding:8px 13px;font-weight:700;cursor:pointer}
-.add:active,.checkout:active{transform:scale(.98)}
-.cart{background:white;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
-.empty{color:var(--muted);font-size:13px;text-align:center;padding:16px 0}
-.cart-line{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #f1eee8}
-.cart-line:last-child{border:0}.cart-name{font-size:13px;font-weight:700}.cart-price{font-size:12px;color:var(--muted);margin-top:3px}
-.qty{display:flex;align-items:center;gap:9px}.qty button{border:0;background:#f1eee8;border-radius:50%;width:27px;height:27px;font-size:17px;cursor:pointer}
-.total{display:flex;justify-content:space-between;font-weight:800;font-size:17px;padding-top:13px}
-form{background:white;border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:12px}
-label{display:block;font-size:12px;font-weight:700;margin:12px 0 6px}
-input,textarea,select{width:100%;padding:12px;border:1px solid #ddd5c8;border-radius:10px;font:14px Arial;background:white}
-textarea{min-height:75px;resize:vertical}
-.checkout{width:100%;margin-top:16px;background:var(--yellow);border:0;border-radius:12px;padding:15px;font-size:15px;font-weight:900;cursor:pointer}
-.small{font-size:11px;color:var(--muted);line-height:1.5;margin-top:10px}
-footer{text-align:center;padding:25px 16px;background:var(--ink);color:#ddd;font-size:12px}
-footer strong{color:var(--yellow)}
-.sticky{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;z-index:5}
-.sticky b{font-size:13px}.sticky span{font-size:11px;color:var(--muted)}
-.sticky button{background:var(--yellow);border:0;border-radius:10px;padding:12px 15px;font-weight:900}
-@media(min-width:600px){.menu-grid{grid-template-columns:repeat(3,1fr)}header h1{font-size:38px}.hero-box{padding:28px 34px}}
+:root{--utama:#171717;--aksen:#d6a928;--latar:#fffaf0;--teks:#171717;--garis:#eee6d8}
+*{box-sizing:border-box}body{margin:0;background:#f5f3ed;color:var(--teks);font-family:Arial,Helvetica,sans-serif}
+header{background:var(--utama);color:#fff;padding:22px 18px 28px;text-align:center}
+.logo{max-width:112px;max-height:76px;object-fit:contain;margin:0 auto 10px;display:none}
+.brand{font-size:13px;font-weight:900;letter-spacing:2px;color:var(--aksen)}
+header h1{font-size:30px;line-height:1.08;margin:10px 0 7px}
+header p{margin:0;color:#ddd;font-size:14px}
+.hero{max-width:850px;margin:16px auto 0;padding:0 15px}
+.heroBox{background:#191919;color:white;border-radius:18px;padding:24px;min-height:145px;display:flex;align-items:center;justify-content:space-between;gap:15px;background-size:cover;background-position:center}
+.heroBox h2{font-size:23px;margin:0 0 8px}.heroBox p{font-size:13px;line-height:1.5;color:#eee;margin:0;max-width:470px}
+.heroIcon{font-size:65px}
+main{max-width:850px;margin:20px auto;padding:0 15px 125px}
+.notice{display:none;padding:11px 13px;border-radius:10px;background:#fff0c7;color:#59420a;font-size:13px;line-height:1.5;margin:12px 0}
+.status{display:inline-block;margin-top:12px;padding:6px 12px;border-radius:20px;background:#e4f4e8;color:#176b32;font-size:12px;font-weight:bold}
+.status.closed{background:#ffe5e5;color:#a11}
+h2.section{font-size:19px;margin:25px 0 12px}
+.categories{display:flex;gap:8px;overflow:auto;padding:2px 0 10px}
+.categories button{white-space:nowrap;border:1px solid var(--garis);background:white;padding:9px 14px;border-radius:22px;font-weight:bold;color:#333}
+.categories button.active{background:var(--utama);color:white;border-color:var(--utama)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.item{background:white;border:1px solid var(--garis);border-radius:15px;padding:12px;display:flex;flex-direction:column;min-width:0}
+.photo{height:125px;width:100%;object-fit:cover;border-radius:11px;background:#f4e8c9}
+.placeholder{height:125px;border-radius:11px;background:linear-gradient(135deg,#fff0c2,#f3d47b);display:grid;place-items:center;font-size:48px}
+.item h3{font-size:14px;line-height:1.35;margin:10px 0 5px}
+.desc{font-size:11px;color:#777;line-height:1.4;min-height:30px}
+.priceRow{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-top:12px}
+.price{font-weight:900;font-size:15px}
+.add{border:0;border-radius:20px;background:var(--utama);color:white;padding:8px 12px;font-weight:bold}
+.add:disabled{opacity:.45}
+.cart,.form{background:white;border:1px solid var(--garis);border-radius:15px;padding:15px}
+.empty{text-align:center;padding:18px;color:#777;font-size:13px}
+.cartLine{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #eee}
+.cartName{font-weight:bold;font-size:13px}.cartSub{font-size:11px;color:#777;margin-top:4px}
+.qty{display:flex;align-items:center;gap:9px}.qty button{width:28px;height:28px;border:0;border-radius:50%;background:#f0ede6;font-size:17px}
+.total{display:flex;justify-content:space-between;padding-top:14px;font-weight:900;font-size:17px}
+label{display:block;font-size:12px;font-weight:bold;margin:12px 0 6px}
+input,textarea,select{width:100%;padding:12px;border:1px solid #ddd5c8;border-radius:9px;font:14px Arial;background:white}
+textarea{min-height:72px}
+.checkout{width:100%;margin-top:16px;padding:15px;border:0;border-radius:11px;background:var(--aksen);color:#171717;font-weight:900;font-size:15px}
+.checkout:disabled{opacity:.5}
+.small{font-size:11px;line-height:1.5;color:#777;margin-top:10px}
+footer{text-align:center;padding:24px 15px;background:var(--utama);color:#ddd;font-size:12px;line-height:1.8}
+footer strong{color:var(--aksen)}
+.sticky{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid var(--garis);padding:10px 15px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:5}
+.sticky b{font-size:13px}.sticky span{font-size:11px;color:#777}.sticky button{border:0;border-radius:9px;padding:12px 15px;background:var(--aksen);font-weight:900}
+.loading{text-align:center;padding:35px 10px;color:#777;font-size:13px}
+@media(min-width:620px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}header h1{font-size:38px}.heroBox{padding:30px 34px}}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand">AYAM BAWANG UMIK</div>
-  <h1>GURIHNYA BIKIN<br>NAGIH!</h1>
-  <p>Ayam Goreng Bawang Putih • Pesan online, praktis & mudah</p>
+  <img id="logo" class="logo" alt="Logo AYAM BAWANG UMIK">
+  <div class="brand" id="brand">AYAM BAWANG UMIK</div>
+  <h1 id="headline">GURIHNYA BIKIN<br>NAGIH!</h1>
+  <p id="tagline">Ayam Goreng Bawang Putih • Pesan online, praktis & mudah</p>
+  <div id="storeStatus" class="status">MEMUAT STATUS TOKO</div>
 </header>
-<section class="hero"><div class="hero-box">
-  <div><h2>Selamat Datang di UMIK</h2><p>Pilih menu favoritmu, masukkan ke keranjang, lalu kirim pesanan langsung ke WhatsApp kami.</p></div>
-  <div class="hero-icon">🍗</div>
+<section class="hero"><div class="heroBox" id="heroBox">
+  <div><h2 id="heroTitle">Selamat Datang di UMIK</h2><p id="heroSubtitle">Pilih menu favoritmu dan pesan langsung melalui WhatsApp kami.</p></div>
+  <div class="heroIcon" id="heroIcon">🍗</div>
 </div></section>
 <main>
-  <h2 class="section-title">Pilih Menu Favorit</h2>
-  <div class="note"><b>Informasi:</b> Daftar menu dan harga di bawah adalah data awal/contoh dari rancangan. Silakan sesuaikan dengan menu dan harga resmi UMIK sebelum link dipublikasikan.</div>
-  <div class="menu-grid" id="menu"></div>
-  <h2 class="section-title">Keranjang Pesanan</h2>
+  <div id="announcement" class="notice"></div>
+  <h2 class="section">Pilih Menu Favorit</h2>
+  <div id="categoryTabs" class="categories"></div>
+  <div id="menu" class="grid"><div class="loading">Mengambil daftar menu...</div></div>
+  <h2 class="section">Keranjang Pesanan</h2>
   <div class="cart">
-    <div id="cartItems"><div class="empty">Keranjang masih kosong. Yuk pilih menu dulu!</div></div>
+    <div id="cartItems"><div class="empty">Keranjang masih kosong.</div></div>
     <div class="total"><span>Total</span><span id="total">Rp0</span></div>
   </div>
-  <h2 class="section-title">Data Pemesan</h2>
-  <form id="orderForm">
+  <h2 class="section">Data Pemesan</h2>
+  <form id="orderForm" class="form">
     <label for="customer">Nama pemesan *</label><input id="customer" required placeholder="Nama Anda">
     <label for="phone">Nomor HP pemesan *</label><input id="phone" required inputmode="tel" placeholder="08xxxxxxxxxx">
     <label for="service">Metode pesanan *</label>
@@ -75,64 +87,135 @@ footer strong{color:var(--yellow)}
     <label for="payment">Metode pembayaran</label>
     <select id="payment"><option>Bayar tunai saat pesanan diterima</option><option>Konfirmasi transfer dengan admin</option><option>Konfirmasi QRIS dengan admin</option></select>
     <label for="notes">Catatan pesanan (opsional)</label><textarea id="notes" placeholder="Contoh: sambal dipisah, tidak pedas, dll."></textarea>
-    <button class="checkout" type="submit">PESAN SEKARANG VIA WHATSAPP</button>
-    <div class="small">Pesanan belum terkirim sampai Anda menekan tombol <b>Kirim</b> di WhatsApp. Admin akan mengonfirmasi ketersediaan, ongkir, dan total akhir.</div>
+    <button id="checkout" class="checkout" type="submit">PESAN SEKARANG VIA WHATSAPP</button>
+    <div class="small">Pesanan dikirim setelah Anda menekan tombol Kirim di WhatsApp. Admin akan mengonfirmasi ketersediaan, ongkir, dan total akhir.</div>
   </form>
 </main>
-<footer><strong>AYAM BAWANG UMIK</strong><br>Terima kasih sudah memilih UMIK ❤️<br>WhatsApp Admin: 08971902000</footer>
+<footer><strong id="footerName">AYAM BAWANG UMIK</strong><br><span id="footerAddress"></span><br><span id="footerHours"></span><br>Terima kasih sudah memilih UMIK ❤️</footer>
 <div class="sticky"><div><b id="stickyCount">0 item</b><br><span id="stickyTotal">Total Rp0</span></div><button onclick="document.getElementById('orderForm').scrollIntoView({behavior:'smooth'})">Lanjut Pesan</button></div>
 <script>
-const ADMIN_WA = "628971902000";
-const menuData = [
- {id:1,name:"Ayam Goreng Bawang Putih",desc:"Ayam goreng khas UMIK",price:12000,icon:"🍗"},
- {id:2,name:"Paket Hemat",desc:"Nasi + ayam + lalapan + sambal",price:15000,icon:"🍱"},
- {id:3,name:"Paket Kenyang",desc:"Porsi makan lebih mantap",price:19000,icon:"🍛"},
- {id:4,name:"Paket Jumbo",desc:"1 nasi + 2 ayam + lalapan + 1 sambal",price:25000,icon:"🍗"},
- {id:5,name:"Nasi Putih",desc:"Nasi putih hangat",price:4000,icon:"🍚"},
- {id:6,name:"Telur",desc:"Tambahan telur",price:5000,icon:"🍳"},
- {id:7,name:"Extra Sambal",desc:"Tambahan sambal pilihan",price:3000,icon:"🌶️"},
- {id:8,name:"Kerupuk",desc:"Pelengkap makan",price:1000,icon:"🥠"},
- {id:9,name:"Es Teh",desc:"Minuman segar",price:3000,icon:"🧋"}
-];
-let cart = {};
-const rupiah = n => "Rp"+n.toLocaleString("id-ID");
+const API_URL = "https://script.google.com/macros/s/AKfycbyhgeEwHxHg3hhZQpMYlJc2AA8F1931P3sL5kiEfws1rVOaRPI1ycorQdsOr_EBBtE/exec";
+let products=[], categories=[], settings={}, cart={}, activeCategory="SEMUA", storeOpen=true;
+const rupiah=n=>"Rp"+Number(n||0).toLocaleString("id-ID");
+function setting(key,fallback=""){return settings[key] && settings[key].nilai!=="" ? settings[key].nilai : fallback;}
+function loadData(){
+  const callbackName="umikCallback";
+  window[callbackName]=function(result){
+    delete window[callbackName];
+    if(!result || !result.success){showLoadError("Data menu belum dapat dimuat.");return;}
+    products=result.data.produk||[];
+    categories=(result.data.kategori||[]).filter(c=>String(c.aktif).toUpperCase()==="YA").sort((a,b)=>Number(a.urutan||0)-Number(b.urutan||0));
+    settings={};
+    (result.data.pengaturan||[]).forEach(s=>settings[s.kunci]=s);
+    applySettings();
+    renderCategories();
+    renderMenu();
+    renderCart();
+  };
+  const script=document.createElement("script");
+  script.src=API_URL+"?callback="+callbackName+"&t="+Date.now();
+  script.onerror=()=>showLoadError("Koneksi data gagal. Muat ulang halaman beberapa saat lagi.");
+  document.body.appendChild(script);
+}
+function showLoadError(msg){
+  document.getElementById("menu").innerHTML="";
+  const d=document.createElement("div");d.className="loading";d.textContent=msg;
+  document.getElementById("menu").appendChild(d);
+}
+function applySettings(){
+  const name=setting("nama_toko","AYAM BAWANG UMIK");
+  document.title=name+" | Pesan Online";
+  document.getElementById("brand").textContent=name;
+  document.getElementById("footerName").textContent=name;
+  document.getElementById("headline").textContent=setting("judul_banner","GURIHNYA BIKIN NAGIH!");
+  document.getElementById("tagline").textContent=setting("subjudul_banner","Ayam Goreng Bawang Putih • Pesan online, praktis & mudah");
+  document.getElementById("heroTitle").textContent=setting("judul_banner","Selamat Datang di UMIK");
+  document.getElementById("heroSubtitle").textContent=setting("subjudul_banner","Pilih menu favoritmu dan pesan langsung melalui WhatsApp kami.");
+  document.getElementById("footerAddress").textContent=setting("alamat_toko","");
+  document.getElementById("footerHours").textContent=setting("jam_operasional","");
+  const logo=setting("logo_url","");
+  if(logo){const img=document.getElementById("logo");img.src=logo;img.style.display="block";}
+  const banner=setting("banner_url","");
+  if(banner)document.getElementById("heroBox").style.backgroundImage="linear-gradient(90deg,#111d,#1118),url('"+banner.replace(/'/g,"%27")+"')";
+  const colors={"--utama":setting("warna_utama","#171717"),"--aksen":setting("warna_aksen","#d6a928"),"--latar":setting("warna_latar","#fffaf0"),"--teks":setting("warna_teks","#171717")};
+  Object.keys(colors).forEach(k=>document.documentElement.style.setProperty(k,colors[k]));
+  const announcement=setting("pengumuman","");
+  if(announcement){const el=document.getElementById("announcement");el.textContent=announcement;el.style.display="block";}
+  storeOpen=setting("status_toko","BUKA").toUpperCase()!=="TUTUP";
+  const status=document.getElementById("storeStatus");
+  status.textContent=storeOpen?"TOKO SEDANG BUKA":"TOKO SEDANG TUTUP";
+  status.classList.toggle("closed",!storeOpen);
+  document.getElementById("checkout").disabled=!storeOpen;
+}
+function renderCategories(){
+  const wrap=document.getElementById("categoryTabs");wrap.innerHTML="";
+  const names=["SEMUA",...categories.map(c=>c.kategori_id)];
+  names.forEach(id=>{
+    const b=document.createElement("button");
+    b.textContent=id==="SEMUA"?"Semua":(categories.find(c=>c.kategori_id===id)||{}).nama_kategori||id;
+    b.className=activeCategory===id?"active":"";
+    b.onclick=()=>{activeCategory=id;renderCategories();renderMenu();};
+    wrap.appendChild(b);
+  });
+}
 function renderMenu(){
- document.getElementById("menu").innerHTML = menuData.map(m=>`<article class="item"><div class="food-icon">${m.icon}</div><h3>${m.name}</h3><div class="desc">${m.desc}</div><div class="price-row"><span class="price">${rupiah(m.price)}</span><button class="add" onclick="changeQty(${m.id},1)">+ Tambah</button></div></article>`).join("");
+  const wrap=document.getElementById("menu");wrap.innerHTML="";
+  const visible=products.filter(p=>activeCategory==="SEMUA"||p.kategori_id===activeCategory).sort((a,b)=>Number(a.urutan||0)-Number(b.urutan||0));
+  if(!visible.length){const d=document.createElement("div");d.className="loading";d.textContent="Belum ada menu pada kategori ini.";wrap.appendChild(d);return;}
+  visible.forEach(p=>{
+    const article=document.createElement("article");article.className="item";
+    if(p.foto_url){const img=document.createElement("img");img.className="photo";img.src=p.foto_url;img.alt=p.nama_produk||"Menu UMIK";img.loading="lazy";img.onerror=()=>{const ph=document.createElement("div");ph.className="placeholder";ph.textContent="🍗";img.replaceWith(ph);};article.appendChild(img);}
+    else{const ph=document.createElement("div");ph.className="placeholder";ph.textContent="🍗";article.appendChild(ph);}
+    const title=document.createElement("h3");title.textContent=p.nama_produk||"Menu UMIK";
+    const desc=document.createElement("div");desc.className="desc";desc.textContent=p.deskripsi||"";
+    const row=document.createElement("div");row.className="priceRow";
+    const price=document.createElement("span");price.className="price";price.textContent=rupiah(p.harga);
+    const add=document.createElement("button");add.className="add";add.textContent="+ Tambah";add.disabled=!storeOpen;add.onclick=()=>changeQty(p.id,1);
+    row.append(price,add);article.append(title,desc,row);wrap.appendChild(article);
+  });
 }
 function changeQty(id,delta){cart[id]=(cart[id]||0)+delta;if(cart[id]<=0)delete cart[id];renderCart();}
 function renderCart(){
- const entries=menuData.filter(m=>cart[m.id]);
- const count=entries.reduce((s,m)=>s+cart[m.id],0);
- const total=entries.reduce((s,m)=>s+m.price*cart[m.id],0);
- document.getElementById("cartItems").innerHTML=entries.length?entries.map(m=>`<div class="cart-line"><div><div class="cart-name">${m.name}</div><div class="cart-price">${rupiah(m.price)} × ${cart[m.id]}</div></div><div class="qty"><button onclick="changeQty(${m.id},-1)">−</button><b>${cart[m.id]}</b><button onclick="changeQty(${m.id},1)">+</button></div></div>`).join(""):'<div class="empty">Keranjang masih kosong. Yuk pilih menu dulu!</div>';
- document.getElementById("total").textContent=rupiah(total);
- document.getElementById("stickyCount").textContent=count+" item";
- document.getElementById("stickyTotal").textContent="Total "+rupiah(total);
+  const wrap=document.getElementById("cartItems");wrap.innerHTML="";
+  const entries=products.filter(p=>cart[p.id]);
+  let count=0,total=0;
+  entries.forEach(p=>{
+    const qty=cart[p.id];count+=qty;total+=Number(p.harga||0)*qty;
+    const line=document.createElement("div");line.className="cartLine";
+    const left=document.createElement("div");const name=document.createElement("div");name.className="cartName";name.textContent=p.nama_produk;
+    const sub=document.createElement("div");sub.className="cartSub";sub.textContent=rupiah(p.harga)+" × "+qty;left.append(name,sub);
+    const controls=document.createElement("div");controls.className="qty";
+    const minus=document.createElement("button");minus.textContent="−";minus.onclick=()=>changeQty(p.id,-1);
+    const amount=document.createElement("b");amount.textContent=qty;
+    const plus=document.createElement("button");plus.textContent="+";plus.onclick=()=>changeQty(p.id,1);
+    controls.append(minus,amount,plus);line.append(left,controls);wrap.appendChild(line);
+  });
+  if(!entries.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Keranjang masih kosong. Yuk pilih menu dulu!";wrap.appendChild(empty);}
+  document.getElementById("total").textContent=rupiah(total);
+  document.getElementById("stickyCount").textContent=count+" item";
+  document.getElementById("stickyTotal").textContent="Total "+rupiah(total);
 }
 document.getElementById("orderForm").addEventListener("submit",e=>{
- e.preventDefault();
- const entries=menuData.filter(m=>cart[m.id]);
- if(!entries.length){alert("Silakan pilih menu terlebih dahulu.");return;}
- const name=document.getElementById("customer").value.trim();
- const phone=document.getElementById("phone").value.trim();
- const service=document.getElementById("service").value;
- const address=document.getElementById("address").value.trim();
- const payment=document.getElementById("payment").value;
- const notes=document.getElementById("notes").value.trim();
- if(service==="Diantar"&&!address){alert("Mohon isi alamat pengiriman.");return;}
- const total=entries.reduce((s,m)=>s+m.price*cart[m.id],0);
- let msg="*PESANAN BARU - AYAM BAWANG UMIK*%0A%0A";
- msg+="Nama: "+encodeURIComponent(name)+"%0ANo. HP: "+encodeURIComponent(phone)+"%0AMetode: "+encodeURIComponent(service)+"%0A";
- if(address)msg+="Alamat: "+encodeURIComponent(address)+"%0A";
- msg+="%0A*DETAIL PESANAN*%0A";
- entries.forEach(m=>{msg+="• "+encodeURIComponent(m.name)+" x"+cart[m.id]+" = "+encodeURIComponent(rupiah(m.price*cart[m.id]))+"%0A";});
- msg+="%0A*Subtotal: "+encodeURIComponent(rupiah(total))+"*%0A";
- msg+="Pembayaran: "+encodeURIComponent(payment)+"%0A";
- if(notes)msg+="Catatan: "+encodeURIComponent(notes)+"%0A";
- msg+="%0A_Mohon konfirmasi pesanan, ongkir, dan total akhir._";
- window.location.href="https://wa.me/"+ADMIN_WA+"?text="+msg;
+  e.preventDefault();
+  if(!storeOpen){alert("Maaf, toko sedang tutup.");return;}
+  const entries=products.filter(p=>cart[p.id]);
+  if(!entries.length){alert("Silakan pilih menu terlebih dahulu.");return;}
+  const name=document.getElementById("customer").value.trim(),phone=document.getElementById("phone").value.trim();
+  const service=document.getElementById("service").value,address=document.getElementById("address").value.trim();
+  const payment=document.getElementById("payment").value,notes=document.getElementById("notes").value.trim();
+  if(service==="Diantar"&&!address){alert("Mohon isi alamat pengiriman.");return;}
+  const total=entries.reduce((s,p)=>s+Number(p.harga||0)*cart[p.id],0);
+  let lines=["*PESANAN BARU - "+setting("nama_toko","AYAM BAWANG UMIK")+"*","","Nama: "+name,"No. HP: "+phone,"Metode: "+service];
+  if(address)lines.push("Alamat: "+address);
+  lines.push("","*DETAIL PESANAN*");
+  entries.forEach(p=>lines.push("• "+p.nama_produk+" x"+cart[p.id]+" = "+rupiah(Number(p.harga||0)*cart[p.id])));
+  lines.push("","*Subtotal: "+rupiah(total)+"*","Pembayaran: "+payment);
+  if(notes)lines.push("Catatan: "+notes);
+  lines.push("","Mohon konfirmasi pesanan, ongkir, dan total akhir.");
+  const wa=setting("nomor_whatsapp","628971902000").replace(/[^0-9]/g,"");
+  window.location.href="https://wa.me/"+wa+"?text="+encodeURIComponent(lines.join("\n"));
 });
-renderMenu();renderCart();
+loadData();
 </script>
 </body>
 </html>
