@@ -53,7 +53,7 @@ footer strong{color:var(--aksen)}
 .sticky b{font-size:13px}.sticky span{font-size:11px;color:#777}.sticky button{border:0;border-radius:9px;padding:12px 15px;background:var(--aksen);font-weight:900}
 .loading{text-align:center;padding:35px 10px;color:#777;font-size:13px}
 @media(min-width:620px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}header h1{font-size:38px}.heroBox{padding:30px 34px}}
-</style>
+.modalShade{position:fixed;inset:0;background:#0009;z-index:20;display:none;align-items:flex-end;justify-content:center;padding:12px}.modalShade.show{display:flex}.optionModal{background:white;width:100%;max-width:520px;border-radius:18px;padding:20px;max-height:88vh;overflow:auto}.optionModal h3{margin:0 0 6px;font-size:19px}.optionModal p{font-size:12px;color:#777;margin:0 0 15px}.optionGroup{margin:15px 0}.optionGroup label{margin:0 0 7px}.optionGroup select{margin-top:7px}.optionActions{display:flex;gap:9px;margin-top:18px}.optionActions button{flex:1;padding:13px;border:0;border-radius:10px;font-weight:bold}.cancelOption{background:#eee}.confirmOption{background:var(--aksen)}</style>
 </head>
 <body>
 <header>
@@ -93,9 +93,10 @@ footer strong{color:var(--aksen)}
 </main>
 <footer><strong id="footerName">AYAM BAWANG UMIK</strong><br><span id="footerAddress"></span><br><span id="footerHours"></span><br>Terima kasih sudah memilih UMIK ❤️</footer>
 <div class="sticky"><div><b id="stickyCount">0 item</b><br><span id="stickyTotal">Total Rp0</span></div><button onclick="document.getElementById('orderForm').scrollIntoView({behavior:'smooth'})">Lanjut Pesan</button></div>
+<div id="optionShade" class="modalShade"><div class="optionModal"><h3 id="optionTitle"></h3><p>Silakan pilih varian yang tersedia.</p><div id="optionFields"></div><div class="optionActions"><button type="button" class="cancelOption" onclick="closeOptions()">Batal</button><button type="button" class="confirmOption" onclick="confirmOptions()">Tambah ke Keranjang</button></div></div></div>
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyhgeEwHxHg3hhZQpMYlJc2AA8F1931P3sL5kiEfws1rVOaRPI1ycorQdsOr_EBBtE/exec";
-let products=[], categories=[], settings={}, cart={}, activeCategory="SEMUA", storeOpen=true;
+let products=[], categories=[], settings={}, choices=[], cart={}, activeCategory="SEMUA", storeOpen=true, selectedProduct=null;
 const rupiah=n=>"Rp"+Number(n||0).toLocaleString("id-ID");
 function setting(key,fallback=""){return settings[key] && settings[key].nilai!=="" ? settings[key].nilai : fallback;}
 function loadData(){
@@ -105,6 +106,7 @@ function loadData(){
     if(!result || !result.success){showLoadError("Data menu belum dapat dimuat.");return;}
     products=result.data.produk||[];
     categories=(result.data.kategori||[]).filter(c=>String(c.aktif).toUpperCase()==="YA").sort((a,b)=>Number(a.urutan||0)-Number(b.urutan||0));
+    choices=result.data.pilihan||[];
     settings={};
     (result.data.pengaturan||[]).forEach(s=>settings[s.kunci]=s);
     applySettings();
@@ -170,24 +172,59 @@ function renderMenu(){
     const desc=document.createElement("div");desc.className="desc";desc.textContent=p.deskripsi||"";
     const row=document.createElement("div");row.className="priceRow";
     const price=document.createElement("span");price.className="price";price.textContent=rupiah(p.harga);
-    const add=document.createElement("button");add.className="add";add.textContent="+ Tambah";add.disabled=!storeOpen;add.onclick=()=>changeQty(p.id,1);
+    const add=document.createElement("button");add.className="add";add.textContent="+ Tambah";add.disabled=!storeOpen;add.onclick=()=>openOptions(p.id);
     row.append(price,add);article.append(title,desc,row);wrap.appendChild(article);
   });
 }
-function changeQty(id,delta){cart[id]=(cart[id]||0)+delta;if(cart[id]<=0)delete cart[id];renderCart();}
+function getProductChoices(id){return choices.filter(x=>String(x.produk_id)===String(id));}
+function isReady(x){return String(x.tersedia||"READY").toUpperCase()==="READY";}
+function openOptions(id){
+  const p=products.find(x=>String(x.id)===String(id));if(!p)return;
+  const rows=getProductChoices(id);if(!rows.length){addCartLine(p,[]);return;}
+  selectedProduct=p;document.getElementById("optionTitle").textContent=p.nama_produk;
+  const field=document.getElementById("optionFields");field.innerHTML="";
+  const groups=[...new Set(rows.map(x=>String(x.grup||"").trim()).filter(Boolean))];
+  groups.forEach(group=>{
+    const items=rows.filter(x=>String(x.grup).trim()===group);
+    const wrap=document.createElement("div");wrap.className="optionGroup";
+    const label=document.createElement("label");label.textContent=group==="AYAM"?"Pilih Jenis Ayam":group==="SAMBAL"?"Pilih Sambal":"Pilih "+group;
+    const select=document.createElement("select");select.dataset.group=group;
+    items.forEach(item=>{const opt=document.createElement("option");opt.value=String(item.nama_pilihan);const extra=Number(item.tambahan_harga||0);opt.textContent=item.nama_pilihan+(extra>0?" (+"+rupiah(extra)+")":"")+(isReady(item)?"":" — HABIS");opt.disabled=!isReady(item);select.appendChild(opt);});
+    const first=items.find(isReady);if(first)select.value=String(first.nama_pilihan);else select.disabled=true;
+    wrap.append(label,select);field.appendChild(wrap);
+  });
+  const blocked=groups.some(g=>!rows.some(x=>String(x.grup).trim()===g&&isReady(x)));
+  document.querySelector(".confirmOption").disabled=blocked;
+  document.getElementById("optionShade").classList.add("show");
+}
+function closeOptions(){document.getElementById("optionShade").classList.remove("show");selectedProduct=null;}
+function confirmOptions(){
+  if(!selectedProduct)return;
+  const selects=[...document.querySelectorAll("#optionFields select")];
+  if(selects.some(s=>s.disabled||!s.value)){alert("Maaf, pilihan untuk menu ini belum tersedia.");return;}
+  const opts=selects.map(s=>{const item=getProductChoices(selectedProduct.id).find(x=>String(x.grup).trim()===s.dataset.group&&String(x.nama_pilihan)===s.value);return {group:s.dataset.group,name:item.nama_pilihan,price:Number(item.tambahan_harga||0)};});
+  const p=selectedProduct;closeOptions();addCartLine(p,opts);
+}
+function addCartLine(p,opts){
+  const key=String(p.id)+"::"+opts.map(x=>x.group+"="+x.name).join("|");
+  if(!cart[key])cart[key]={key,id:p.id,name:p.nama_produk,basePrice:Number(p.harga||0),options:opts,qty:0};
+  cart[key].qty++;renderCart();
+}
+function changeQty(key,delta){if(!cart[key])return;cart[key].qty+=delta;if(cart[key].qty<=0)delete cart[key];renderCart();}
+function linePrice(item){return item.basePrice+item.options.reduce((s,x)=>s+x.price,0);}
 function renderCart(){
   const wrap=document.getElementById("cartItems");wrap.innerHTML="";
-  const entries=products.filter(p=>cart[p.id]);
-  let count=0,total=0;
-  entries.forEach(p=>{
-    const qty=cart[p.id];count+=qty;total+=Number(p.harga||0)*qty;
+  const entries=Object.values(cart);let count=0,total=0;
+  entries.forEach(item=>{
+    const qty=item.qty,unit=linePrice(item);count+=qty;total+=unit*qty;
     const line=document.createElement("div");line.className="cartLine";
-    const left=document.createElement("div");const name=document.createElement("div");name.className="cartName";name.textContent=p.nama_produk;
-    const sub=document.createElement("div");sub.className="cartSub";sub.textContent=rupiah(p.harga)+" × "+qty;left.append(name,sub);
+    const left=document.createElement("div");const name=document.createElement("div");name.className="cartName";name.textContent=item.name;
+    const detail=item.options.map(x=>x.group+": "+x.name+(x.price>0?" (+"+rupiah(x.price)+")":"")).join(" • ");
+    const sub=document.createElement("div");sub.className="cartSub";sub.textContent=(detail?detail+" • ":"")+rupiah(unit)+" × "+qty;left.append(name,sub);
     const controls=document.createElement("div");controls.className="qty";
-    const minus=document.createElement("button");minus.textContent="−";minus.onclick=()=>changeQty(p.id,-1);
+    const minus=document.createElement("button");minus.textContent="−";minus.onclick=()=>changeQty(item.key,-1);
     const amount=document.createElement("b");amount.textContent=qty;
-    const plus=document.createElement("button");plus.textContent="+";plus.onclick=()=>changeQty(p.id,1);
+    const plus=document.createElement("button");plus.textContent="+";plus.onclick=()=>changeQty(item.key,1);
     controls.append(minus,amount,plus);line.append(left,controls);wrap.appendChild(line);
   });
   if(!entries.length){const empty=document.createElement("div");empty.className="empty";empty.textContent="Keranjang masih kosong. Yuk pilih menu dulu!";wrap.appendChild(empty);}
@@ -198,17 +235,17 @@ function renderCart(){
 document.getElementById("orderForm").addEventListener("submit",e=>{
   e.preventDefault();
   if(!storeOpen){alert("Maaf, toko sedang tutup.");return;}
-  const entries=products.filter(p=>cart[p.id]);
+  const entries=Object.values(cart);
   if(!entries.length){alert("Silakan pilih menu terlebih dahulu.");return;}
   const name=document.getElementById("customer").value.trim(),phone=document.getElementById("phone").value.trim();
   const service=document.getElementById("service").value,address=document.getElementById("address").value.trim();
   const payment=document.getElementById("payment").value,notes=document.getElementById("notes").value.trim();
   if(service==="Diantar"&&!address){alert("Mohon isi alamat pengiriman.");return;}
-  const total=entries.reduce((s,p)=>s+Number(p.harga||0)*cart[p.id],0);
+  const total=entries.reduce((s,item)=>s+linePrice(item)*item.qty,0);
   let lines=["*PESANAN BARU - "+setting("nama_toko","AYAM BAWANG UMIK")+"*","","Nama: "+name,"No. HP: "+phone,"Metode: "+service];
   if(address)lines.push("Alamat: "+address);
   lines.push("","*DETAIL PESANAN*");
-  entries.forEach(p=>lines.push("• "+p.nama_produk+" x"+cart[p.id]+" = "+rupiah(Number(p.harga||0)*cart[p.id])));
+  entries.forEach(item=>{const detail=item.options.map(x=>x.group+": "+x.name).join(", ");lines.push("• "+item.name+(detail?" ("+detail+")":"")+" x"+item.qty+" = "+rupiah(linePrice(item)*item.qty));});
   lines.push("","*Subtotal: "+rupiah(total)+"*","Pembayaran: "+payment);
   if(notes)lines.push("Catatan: "+notes);
   lines.push("","Mohon konfirmasi pesanan, ongkir, dan total akhir.");
