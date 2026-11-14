@@ -100,11 +100,17 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyhgeEwHxHg3hhZQpMYlJc2
 let products=[], categories=[], settings={}, choices=[], cart={}, activeCategory="SEMUA", storeOpen=true, selectedProduct=null;
 const rupiah=n=>"Rp"+Number(n||0).toLocaleString("id-ID");
 function setting(key,fallback=""){return settings[key] && settings[key].nilai!=="" ? settings[key].nilai : fallback;}
+let loadTimer=null, loadScript=null;
 function loadData(){
   const callbackName="umikCallback";
+  if(loadTimer)clearTimeout(loadTimer);
+  if(loadScript){loadScript.remove();loadScript=null;}
+  document.getElementById("menu").innerHTML='<div class="loading">Mengambil daftar menu...</div>';
   window[callbackName]=function(result){
+    if(loadTimer)clearTimeout(loadTimer);
+    if(loadScript){loadScript.remove();loadScript=null;}
     delete window[callbackName];
-    if(!result || !result.success){showLoadError("Data menu belum dapat dimuat.");return;}
+    if(!result || !result.success){showLoadError("Data menu belum dapat dimuat. Silakan coba lagi.");return;}
     products=result.data.produk||[];
     categories=(result.data.kategori||[]).filter(c=>String(c.aktif).toUpperCase()==="YA").sort((a,b)=>Number(a.urutan||0)-Number(b.urutan||0));
     choices=result.data.pilihan||[];
@@ -116,14 +122,25 @@ function loadData(){
     renderCart();
   };
   const script=document.createElement("script");
+  loadScript=script;
   script.src=API_URL+"?callback="+callbackName+"&t="+Date.now();
-  script.onerror=()=>showLoadError("Koneksi data gagal. Muat ulang halaman beberapa saat lagi.");
+  script.onerror=()=>{
+    if(loadTimer)clearTimeout(loadTimer);
+    loadTimer=null;loadScript=null;delete window[callbackName];
+    showLoadError("Koneksi ke data menu gagal. Periksa koneksi internet lalu coba lagi.");
+  };
+  loadTimer=setTimeout(()=>{
+    if(loadScript){loadScript.remove();loadScript=null;}
+    delete window[callbackName];loadTimer=null;
+    showLoadError("Data menu belum merespons setelah 15 detik. Silakan coba lagi.");
+  },15000);
   document.body.appendChild(script);
 }
 function showLoadError(msg){
-  document.getElementById("menu").innerHTML="";
+  const wrap=document.getElementById("menu");wrap.innerHTML="";
   const d=document.createElement("div");d.className="loading";d.textContent=msg;
-  document.getElementById("menu").appendChild(d);
+  const b=document.createElement("button");b.className="add";b.textContent="Coba Lagi";b.style.margin="12px auto";b.style.display="block";b.onclick=loadData;
+  wrap.append(d,b);
 }
 function applySettings(){
   const name=setting("nama_toko","AYAM BAWANG UMIK");
