@@ -83,6 +83,7 @@ footer strong{color:var(--aksen)}
     <label for="phone">Nomor HP pemesan *</label><input id="phone" required inputmode="tel" placeholder="08xxxxxxxxxx">
     <label for="service">Metode pesanan *</label>
     <select id="service"><option value="Diantar">Diantar</option><option value="Ambil sendiri">Ambil sendiri</option></select>
+    <label for="orderTime">Jam Pengambilan/Pengantaran</label><input id="orderTime" type="time"><div class="small">Pilih jam yang diinginkan. Kosongkan jika pesanan ingin diproses segera.</div>
     <label for="address">Alamat pengiriman / patokan</label><textarea id="address" placeholder="Nama jalan, desa/kelurahan, kecamatan, patokan rumah"></textarea>
     <label for="payment">Metode pembayaran</label>
     <select id="payment"><option>Bayar tunai saat pesanan diterima</option><option>Konfirmasi transfer dengan admin</option><option>Konfirmasi QRIS dengan admin</option></select>
@@ -239,10 +240,11 @@ document.getElementById("orderForm").addEventListener("submit",e=>{
   if(!entries.length){alert("Silakan pilih menu terlebih dahulu.");return;}
   const name=document.getElementById("customer").value.trim(),phone=document.getElementById("phone").value.trim();
   const service=document.getElementById("service").value,address=document.getElementById("address").value.trim();
+  const orderTime=document.getElementById("orderTime").value;
   const payment=document.getElementById("payment").value,notes=document.getElementById("notes").value.trim();
   if(service==="Diantar"&&!address){alert("Mohon isi alamat pengiriman.");return;}
   const total=entries.reduce((s,item)=>s+linePrice(item)*item.qty,0);
-  let lines=["*PESANAN BARU - "+setting("nama_toko","AYAM BAWANG UMIK")+"*","","Nama: "+name,"No. HP: "+phone,"Metode: "+service];
+  let lines=["*PESANAN BARU - "+setting("nama_toko","AYAM BAWANG UMIK")+"*","","Nama: "+name,"No. HP: "+phone,"Metode: "+service,"Jam Pengambilan/Pengantaran: "+(orderTime||"Segera / secepatnya")];
   if(address)lines.push("Alamat: "+address);
   lines.push("","*DETAIL PESANAN*");
   entries.forEach(item=>{const detail=item.options.map(x=>x.group+": "+x.name).join(", ");lines.push("• "+item.name+(detail?" ("+detail+")":"")+" x"+item.qty+" = "+rupiah(linePrice(item)*item.qty));});
