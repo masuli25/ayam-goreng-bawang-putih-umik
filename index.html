@@ -269,7 +269,7 @@ document.getElementById("orderForm").addEventListener("submit",e=>{
   lines.push("","*Subtotal: "+rupiah(total)+"*","Pembayaran: "+payment);
   if(notes)lines.push("Catatan: "+notes);
   lines.push("","Mohon konfirmasi pesanan, ongkir, dan total akhir.");
-  const wa=setting("nomor_whatsapp","628971902000").replace(/[^0-9]/g,"");
+  const wa="6281228228288";
   window.location.href="https://wa.me/"+wa+"?text="+encodeURIComponent(lines.join("\n"));
 });
 loadData();
