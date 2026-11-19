@@ -13,6 +13,7 @@ header strong{font-size:15px}
 #status{font-size:12px;color:#d9e5ff}
 main{height:calc(100% - 54px);display:flex;flex-direction:column}
 #notice{padding:9px 12px;background:#eaf2ff;color:#174a91;font-size:12px;line-height:1.4}
+button{border:0;border-radius:7px;padding:9px 12px;background:#0066ff;color:#fff;font-weight:bold;font-size:12px;white-space:nowrap}
 iframe{display:block;border:0;width:100%;flex:1;background:#fff}
 </style>
 </head>
@@ -23,6 +24,10 @@ iframe{display:block;border:0;width:100%;flex:1;background:#fff}
 </header>
 <main>
   <div id="notice">Buka halaman ini melalui aplikasi Printlet agar struk dapat dikirim ke printer Bluetooth.</div>
+  <div style="padding:8px 12px;background:#fff;display:flex;align-items:center;gap:10px">
+    <button id="testPrintButton" type="button">TES CETAK PENGHUBUNG</button>
+    <span style="font-size:11px;color:#666">Tes ini tidak memakai atau mengubah pesanan.</span>
+  </div>
   <iframe id="adminFrame" title="UMIK Admin" src="https://script.google.com/macros/s/AKfycbyhgeEwHxHg3hhZQpMYlJc2AA8F1931P3sL5kiEfws1rVOaRPI1ycorQdsOr_EBBtE/exec?admin=1" allow="clipboard-read; clipboard-write"></iframe>
 </main>
 <script>
@@ -37,6 +42,33 @@ iframe{display:block;border:0;width:100%;flex:1;background:#fff}
   if(bridge){
     notice.textContent='Printlet terhubung. Gunakan menu Pesanan di bawah, lalu tekan tombol cetak struk.';
   }
+
+
+  document.getElementById('testPrintButton').addEventListener('click',function(){
+    if(!window.ReactNativeWebView || typeof window.ReactNativeWebView.postMessage!=='function'){
+      alert('Bridge Printlet tidak terdeteksi pada halaman utama.');
+      return;
+    }
+    var canvas=document.createElement('canvas');
+    canvas.width=384; canvas.height=430;
+    var ctx=canvas.getContext('2d');
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,384,430);
+    ctx.fillStyle='#000'; ctx.textAlign='center';
+    ctx.font='bold 25px Arial'; ctx.fillText('AYAM BAWANG UMIK',192,48);
+    ctx.font='bold 21px Arial'; ctx.fillText('TES PENGHUBUNG ADMIN',192,95);
+    ctx.textAlign='left'; ctx.font='17px Arial';
+    ctx.fillText('--------------------------------',10,135);
+    ctx.fillText('Tes dari halaman Admin Printlet',10,175);
+    ctx.fillText('Ukuran gambar: 384 px',10,210);
+    ctx.fillText('Status: UJI PENGHUBUNG',10,245);
+    ctx.fillText('--------------------------------',10,285);
+    ctx.textAlign='center'; ctx.font='bold 22px Arial';
+    ctx.fillText('JIKA TERBACA, BERHASIL',192,345);
+    ctx.font='16px Arial'; ctx.fillText('UMIK PRINT BRIDGE',192,385);
+    var dataUrl=canvas.toDataURL('image/png');
+    notice.textContent='Mengirim tes penghubung ('+Math.round(dataUrl.length*0.75/1024)+' KB)…';
+    window.ReactNativeWebView.postMessage(JSON.stringify({data_img:dataUrl,fit:false}));
+  });
 
   window.addEventListener('message',function(event){
     // Hanya menerima pesan dari iframe Admin yang ditanam pada halaman ini.
