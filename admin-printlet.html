@@ -62,22 +62,14 @@ iframe{display:block;border:0;width:100%;flex:1;background:#fff}
       return;
     }
 
-    if (window.parent && window.parent !== window) {
-  window.parent.postMessage({
-    type: 'UMIK_PRINT_RECEIPT',
-    data_img: dataUrl,
-    fit: false
-  }, '*');
-} else if (window.ReactNativeWebView) {
-  window.ReactNativeWebView.postMessage(JSON.stringify({
-    data_img: dataUrl,
-    printerWidth: 384,
-    fit: false
-  }));
-} else {
-  alert('Printlet tidak terhubung. Buka Admin melalui halaman Admin Printlet.');
-}
-    notice.textContent='Gambar struk sudah dikirim ke Printlet. Periksa printer Anda.';
+    // Kirim dengan format yang sama persis seperti halaman test print yang sudah terbukti berhasil.
+    var imageKB=Math.round(dataUrl.length*0.75/1024);
+    notice.textContent='Mengirim gambar struk ('+imageKB+' KB) ke Printlet…';
+    window.ReactNativeWebView.postMessage(JSON.stringify({
+      data_img: dataUrl,
+      fit: false
+    }));
+    notice.textContent='Perintah cetak dikirim ('+imageKB+' KB). Tunggu beberapa detik dan periksa printer.';
   });
 })();
 </script>
