@@ -71,8 +71,10 @@ iframe{display:block;border:0;width:100%;flex:1;background:#fff}
   });
 
   window.addEventListener('message',function(event){
-    // Hanya menerima pesan dari iframe Admin yang ditanam pada halaman ini.
-    if(event.source!==frame.contentWindow) return;
+    // Admin Google Apps Script dapat berada di dalam iframe perantara.
+    // Karena itu sumber pesan tidak selalu sama dengan frame.contentWindow.
+    // Batasi penerimaan pada origin Google Apps Script / Googleusercontent.
+    if(!/^(https:\/\/)?([a-z0-9-]+\.)*(script\.google\.com|googleusercontent\.com)$/i.test(event.origin)) return;
 
     var msg=event.data;
     if(typeof msg==='string'){
@@ -101,7 +103,7 @@ iframe{display:block;border:0;width:100%;flex:1;background:#fff}
       data_img: dataUrl,
       fit: false
     }));
-    notice.textContent='Perintah cetak dikirim ('+imageKB+' KB). Tunggu beberapa detik dan periksa printer.';
+    notice.textContent='Gambar struk diterima dan diteruskan ke Printlet ('+imageKB+' KB). Tunggu beberapa detik dan periksa printer.';
   });
 })();
 </script>
