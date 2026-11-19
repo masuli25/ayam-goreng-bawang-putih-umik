@@ -251,27 +251,135 @@ function renderCart(){
   document.getElementById("stickyCount").textContent=count+" item";
   document.getElementById("stickyTotal").textContent="Total "+rupiah(total);
 }
+function sendOrderToSheet(payload, whatsappURL){
+  const frame=document.createElement("iframe");
+  const frameName="umikOrderFrame_"+Date.now();
+  frame.name=frameName;
+  frame.style.display="none";
+
+  const form=document.createElement("form");
+  form.method="POST";
+  form.action=API_URL;
+  form.target=frameName;
+  form.style.display="none";
+
+  const action=document.createElement("input");
+  action.type="hidden";
+  action.name="action";
+  action.value="saveOrder";
+
+  const data=document.createElement("input");
+  data.type="hidden";
+  data.name="payload";
+  data.value=JSON.stringify(payload);
+
+  form.append(action,data);
+  document.body.append(frame,form);
+
+  let submitted=false;
+  let finished=false;
+  const goToWhatsApp=()=>{
+    if(finished)return;
+    finished=true;
+    window.location.href=whatsappURL;
+  };
+
+  // Tunggu iframe siap, kirim pesanan, lalu buka WhatsApp setelah server merespons.
+  frame.addEventListener("load",()=>{
+    if(!submitted){
+      submitted=true;
+      form.submit();
+    }else{
+      goToWhatsApp();
+    }
+  });
+
+  frame.src="about:blank";
+  setTimeout(goToWhatsApp,15000);
+}
+
 document.getElementById("orderForm").addEventListener("submit",e=>{
   e.preventDefault();
   if(!storeOpen){alert("Maaf, toko sedang tutup.");return;}
   const entries=Object.values(cart);
   if(!entries.length){alert("Silakan pilih menu terlebih dahulu.");return;}
-  const name=document.getElementById("customer").value.trim(),phone=document.getElementById("phone").value.trim();
-  const service=document.getElementById("service").value,address=document.getElementById("address").value.trim();
+
+  const button=document.getElementById("checkout");
+  if(button.disabled)return;
+
+  const name=document.getElementById("customer").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const service=document.getElementById("service").value;
+  const address=document.getElementById("address").value.trim();
   const orderTime=document.getElementById("orderTime").value;
-  const payment=document.getElementById("payment").value,notes=document.getElementById("notes").value.trim();
+  const payment=document.getElementById("payment").value;
+  const notes=document.getElementById("notes").value.trim();
+
+  if(!name||!phone){alert("Nama dan nomor HP wajib diisi.");return;}
   if(service==="Diantar"&&!address){alert("Mohon isi alamat pengiriman.");return;}
-  const total=entries.reduce((s,item)=>s+linePrice(item)*item.qty,0);
-  let lines=["*PESANAN BARU - "+setting("nama_toko","AYAM BAWANG UMIK")+"*","","Nama: "+name,"No. HP: "+phone,"Metode: "+service,"Jam Pengambilan/Pengantaran: "+(orderTime||"Segera / secepatnya")];
+
+  const subtotal=entries.reduce((s,item)=>s+linePrice(item)*item.qty,0);
+
+  // Data ini dikirim ke Apps Script untuk disimpan pada tab PESANAN.
+  const payload={
+    customer:name,
+    phone:phone,
+    service:service,
+    order_time:orderTime||"Segera / secepatnya",
+    address:address,
+    payment:payment,
+    notes:notes,
+    items:entries.map(item=>({
+      key:item.key,
+      id:item.id,
+      name:item.name,
+      basePrice:Number(item.basePrice||0),
+      options:(item.options||[]).map(x=>({
+        group:x.group,
+        name:x.name,
+        price:Number(x.price||0)
+      })),
+      personName:item.personName||"",
+      qty:Number(item.qty||0)
+    })),
+    subtotal:subtotal,
+    shipping_fee:0,
+    total:subtotal,
+    status:"BARU"
+  };
+
+  let lines=[
+    "*PESANAN BARU - "+setting("nama_toko","AYAM BAWANG UMIK")+"*",
+    "",
+    "Nama: "+name,
+    "No. HP: "+phone,
+    "Metode: "+service,
+    "Jam Pengambilan/Pengantaran: "+(orderTime||"Segera / secepatnya")
+  ];
+
   if(address)lines.push("Alamat: "+address);
   lines.push("","*DETAIL PESANAN*");
-  entries.forEach(item=>{const detail=item.options.map(x=>x.group+": "+x.name).join(", ");lines.push("• "+(item.personName?item.personName+" : ":"")+item.name+(detail?" ("+detail+")":"")+" x"+item.qty+" = "+rupiah(linePrice(item)*item.qty));});
-  lines.push("","*Subtotal: "+rupiah(total)+"*","Pembayaran: "+payment);
+
+  entries.forEach(item=>{
+    const detail=item.options.map(x=>x.group+": "+x.name).join(", ");
+    lines.push("• "+(item.personName?item.personName+" : ":"")+
+      item.name+(detail?" ("+detail+")":"")+
+      " x"+item.qty+" = "+rupiah(linePrice(item)*item.qty));
+  });
+
+  lines.push("","*Subtotal: "+rupiah(subtotal)+"*","Pembayaran: "+payment);
   if(notes)lines.push("Catatan: "+notes);
   lines.push("","Mohon konfirmasi pesanan, ongkir, dan total akhir.");
+
   const wa="6281228228288";
-  window.location.href="https://wa.me/"+wa+"?text="+encodeURIComponent(lines.join("\n"));
+  const whatsappURL="https://wa.me/"+wa+"?text="+encodeURIComponent(lines.join("\n"));
+
+  button.disabled=true;
+  button.textContent="MENGIRIM PESANAN...";
+
+  sendOrderToSheet(payload,whatsappURL);
 });
+
 loadData();
 </script>
 </body>
