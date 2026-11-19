@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0066ff">
+<title>UMIK Admin - Printlet</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;font-family:Arial,sans-serif;background:#f2f4f7;color:#171717}
+header{height:54px;padding:0 14px;background:#111;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:10px}
+header strong{font-size:15px}
+#status{font-size:12px;color:#d9e5ff}
+main{height:calc(100% - 54px);display:flex;flex-direction:column}
+#notice{padding:9px 12px;background:#eaf2ff;color:#174a91;font-size:12px;line-height:1.4}
+iframe{display:block;border:0;width:100%;flex:1;background:#fff}
+</style>
+</head>
+<body>
+<header>
+  <strong>AYAM BAWANG UMIK · ADMIN</strong>
+  <span id="status">Memeriksa Printlet…</span>
+</header>
+<main>
+  <div id="notice">Buka halaman ini melalui aplikasi Printlet agar struk dapat dikirim ke printer Bluetooth.</div>
+  <iframe id="adminFrame" title="UMIK Admin" src="https://script.google.com/macros/s/AKfycbyhgeEwHxHg3hhZQpMYlJc2AA8F1931P3sL5kiEfws1rVOaRPI1ycorQdsOr_EBBtE/exec?admin=1" allow="clipboard-read; clipboard-write"></iframe>
+</main>
+<script>
+(function(){
+  var frame=document.getElementById('adminFrame');
+  var status=document.getElementById('status');
+  var notice=document.getElementById('notice');
+  var bridge=!!(window.ReactNativeWebView && typeof window.ReactNativeWebView.postMessage==='function');
+
+  status.textContent=bridge?'Printlet terdeteksi':'Buka melalui Printlet';
+  status.style.color=bridge?'#9ff0b2':'#ffe09a';
+  if(bridge){
+    notice.textContent='Printlet terhubung. Gunakan menu Pesanan di bawah, lalu tekan tombol cetak struk.';
+  }
+
+  window.addEventListener('message',function(event){
+    // Hanya menerima pesan dari iframe Admin yang ditanam pada halaman ini.
+    if(event.source!==frame.contentWindow) return;
+
+    var msg=event.data;
+    if(typeof msg==='string'){
+      try{msg=JSON.parse(msg);}catch(e){return;}
+    }
+    if(!msg || msg.type!=='UMIK_PRINT_RECEIPT') return;
+
+    var dataUrl=msg.data_img;
+    if(typeof dataUrl!=='string' || !/^data:image\/(png|jpeg);base64,/.test(dataUrl)){
+      alert('Gambar struk tidak valid. Silakan coba cetak kembali.');
+      return;
+    }
+    if(dataUrl.length>1400000){
+      alert('Ukuran gambar struk terlalu besar. Silakan coba lagi.');
+      return;
+    }
+    if(!window.ReactNativeWebView || typeof window.ReactNativeWebView.postMessage!=='function'){
+      alert('Printlet tidak terdeteksi. Buka halaman Admin ini dari aplikasi Printlet.');
+      return;
+    }
+
+    window.ReactNativeWebView.postMessage(JSON.stringify({
+      data_img:dataUrl,
+      printerWidth:384,
+      fit:false
+    }));
+    notice.textContent='Gambar struk sudah dikirim ke Printlet. Periksa printer Anda.';
+  });
+})();
+</script>
+</body>
+</html>
