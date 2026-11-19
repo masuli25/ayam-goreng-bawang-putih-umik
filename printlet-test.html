@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#171717">
+<title>TEST PRINTLET UMIK</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:22px;background:#f3f3f3;color:#171717;font-family:Arial,sans-serif}
+main{max-width:440px;margin:30px auto;background:#fff;border-radius:16px;padding:22px;box-shadow:0 4px 18px #0001}
+h1{font-size:22px;margin:0 0 8px}p{color:#666;font-size:14px;line-height:1.5}
+#status{padding:13px;border-radius:10px;background:#fff0c7;color:#654900;font-weight:bold;font-size:14px;overflow-wrap:anywhere}
+button{width:100%;padding:16px;margin-top:14px;border:0;border-radius:10px;background:#0066ff;color:#fff;font-size:16px;font-weight:bold}
+button:disabled{opacity:.5}
+small{display:block;margin-top:14px;color:#777;line-height:1.5}
+</style>
+</head>
+<body>
+<main>
+<h1>TEST PRINTLET UMIK</h1>
+<p>Halaman tes mandiri untuk memeriksa penghubung Printlet dan printer VSC MP 58-C.</p>
+<div id="status">Memeriksa penghubung...</div>
+<button id="test" onclick="testPrint()">TES CETAK STRUK</button>
+<small>Jika status terdeteksi, tekan TES CETAK. Halaman ini tidak mengakses atau mengubah data pesanan.</small>
+</main>
+<script>
+function checkBridge(){
+  var ok=!!(window.ReactNativeWebView && typeof window.ReactNativeWebView.postMessage==='function');
+  var el=document.getElementById('status');
+  el.textContent=ok?'PRINTLET TERDETEKSI':'PRINTLET TIDAK TERDETEKSI';
+  el.style.background=ok?'#e5f7e9':'#fff0c7';
+  el.style.color=ok?'#176b32':'#654900';
+}
+function testPrint(){
+  if(!window.ReactNativeWebView || typeof window.ReactNativeWebView.postMessage!=='function'){
+    alert('Penghubung Printlet tidak tersedia pada halaman ini.');
+    checkBridge();return;
+  }
+  var c=document.createElement('canvas');c.width=384;c.height=430;
+  var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,384,430);
+  x.fillStyle='#000';x.textAlign='center';x.font='bold 25px Arial';x.fillText('AYAM BAWANG UMIK',192,48);
+  x.font='bold 21px Arial';x.fillText('TEST PRINTLET',192,95);
+  x.textAlign='left';x.font='17px Arial';
+  x.fillText('--------------------------------',10,135);
+  x.fillText('Printer: VSC MP 58-C',10,175);
+  x.fillText('Kertas: 58 mm',10,210);
+  x.fillText('Status: TES CETAK',10,245);
+  x.fillText('--------------------------------',10,285);
+  x.textAlign='center';x.font='bold 22px Arial';x.fillText('BERHASIL?',192,345);
+  x.font='16px Arial';x.fillText('TEST PRINTLET UMIK',192,385);
+  var dataUrl=c.toDataURL('image/png');
+  window.ReactNativeWebView.postMessage(JSON.stringify({data_img:dataUrl,fit:false}));
+}
+checkBridge();
+</script>
+</body>
+</html>
